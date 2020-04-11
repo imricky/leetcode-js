@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/567.permutation-in-string.js"
+      "program": "${workspaceFolder}/20.valid-parentheses.js"
     }
   ]
 }
