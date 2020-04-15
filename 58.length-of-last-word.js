@@ -20,12 +20,19 @@
  * @param {string} s
  * @return {number}
  */
+// 第一种解法
 var lengthOfLastWord = function(s) {
   let str = s.trim();
   if(str.length == 0){
       return 0;
   }
   return str.slice(str.lastIndexOf(' ')+1).length;
+};
+
+// 第二种解法
+var lengthOfLastWord = function(s) {
+  let str = s.trim().split(' ');
+  return str.length === 0 ? 0: str[str.length -1].length;
 };
 
 // var a = 'Hello World'
