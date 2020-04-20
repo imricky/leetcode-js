@@ -109,28 +109,119 @@
 
 // let a = [[0,0,0],[0,1,0],[0,0,0]]
 //一、dp常数优化版
-let updateMatrix = (matrix) => {
-  let rows = matrix.length, cols = matrix[0].length
-  let dp = new Array(rows).fill(Infinity).map(() => new Array(cols).fill(Infinity))
+// let updateMatrix = (matrix) => {
+//   let rows = matrix.length, cols = matrix[0].length
+//   let dp = new Array(rows).fill(Infinity).map(() => new Array(cols).fill(Infinity))
 
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (matrix[r][c] === 0) dp[r][c] = 0
-      else {
-        if (r > 0) dp[r][c] = Math.min(dp[r][c], dp[r - 1][c] + 1)
-        if (c > 0) dp[r][c] = Math.min(dp[r][c], dp[r][c - 1] + 1)
-      }
+//   for (let r = 0; r < rows; r++) {
+//     for (let c = 0; c < cols; c++) {
+//       if (matrix[r][c] === 0) dp[r][c] = 0
+//       else {
+//         if (r > 0) dp[r][c] = Math.min(dp[r][c], dp[r - 1][c] + 1)
+//         if (c > 0) dp[r][c] = Math.min(dp[r][c], dp[r][c - 1] + 1)
+//       }
+//     }
+//   }
+
+//   for (let r = rows - 1; r >= 0; r--) {
+//     for (let c = cols - 1; c >= 0; c--) {
+//       if (r < rows - 1) dp[r][c] = Math.min(dp[r][c], dp[r + 1][c] + 1)
+//       if (c < cols - 1) dp[r][c] = Math.min(dp[r][c], dp[r][c + 1] + 1)
+//     }
+//   }
+//   return dp
+// };
+
+
+// 暴力解法：
+/**
+ * @param {number[][]} matrix
+ * @return {number[][]}
+ */
+// var updateMatrix = function(matrix) {
+//   if(!matrix.length || !matrix[0].length) return null;
+
+//   let n = matrix.length;
+//   let m = matrix[0].length;
+//   let ans = new Array(n);
+//   for(let i = 0; i < n; i++) ans[i] = new Array(m).fill(-1);
+
+//   for(let i = 0; i < n; i++)
+//       for(let j = 0; j < m; j++) {
+//           if(matrix[i][j] === 0) ans[i][j] = 0;
+//           else ans[i][j] = bfs(i, j);
+//       }
+
+//   return ans;
+
+//   function bfs(row, col) {
+//       let queue = [[row, col]];
+//       let visited = new Array(n);
+//       let dist = 0;
+//       for(let i = 0; i < n; i++) visited[i] = new Array(m).fill(false);
+//       visited[row][col] = true;
+//       while(queue.length) {
+//           let len = queue.length;
+//           dist++;
+//           for(let i = 0; i < len; i++) {
+//               let top = queue.shift(); 
+
+//               if(top[0] + 1 < n && !visited[top[0]+1][top[1]]) {
+//                   if(matrix[top[0]+1][top[1]] === 0) return dist;
+//                   queue.push([top[0]+1, top[1]]);
+//                   visited[top[0]+1][top[1]] = true;
+//               }
+//               if(top[0] - 1 >= 0 && !visited[top[0]-1][top[1]]) {
+//                   if(matrix[top[0]-1][top[1]] === 0) return dist;
+//                   queue.push([top[0]-1, top[1]]);
+//                   visited[top[0]-1][top[1]] = true;
+//               }
+//               if(top[1] + 1 < m && !visited[top[0]][top[1]+1]) {
+//                   if(matrix[top[0]][top[1]+1] === 0) return dist;
+//                   queue.push([top[0], top[1]+1]);
+//                   visited[top[0]][top[1]+1] = true;
+//               }
+//               if(top[1] - 1 >= 0 && !visited[top[0]][top[1]-1]) {
+//                   if(matrix[top[0]][top[1]-1] === 0) return dist;
+//                   queue.push([top[0], top[1]-1]);
+//                   visited[top[0]][top[1]-1] = true;
+//               }
+//           }
+//       }
+//   }
+// };
+
+
+// 0 0 0 
+// 0 1 0
+// 1 1 1  
+var updateMatrix = function (matrix) {
+  if (!matrix.length || !matrix[0].length) return null;
+
+  let n = matrix.length;
+  let m = matrix[0].length;
+  let ans = new Array(n);
+  for (let i = 0; i < n; i++) ans[i] = new Array(m).fill(n + m);
+
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < m; j++)
+      if (matrix[i][j] === 0) ans[i][j] = 0;
+
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < m; j++) {
+      if (i - 1 >= 0) ans[i][j] = Math.min(ans[i][j], ans[i - 1][j] + 1);
+      if (j - 1 >= 0) ans[i][j] = Math.min(ans[i][j], ans[i][j - 1] + 1);
     }
-  }
 
-  for (let r = rows - 1; r >= 0; r--) {
-    for (let c = cols - 1; c >= 0; c--) {
-      if (r < rows - 1) dp[r][c] = Math.min(dp[r][c], dp[r + 1][c] + 1)
-      if (c < cols - 1) dp[r][c] = Math.min(dp[r][c], dp[r][c + 1] + 1)
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--) {
+      if (i + 1 < n) ans[i][j] = Math.min(ans[i][j], ans[i + 1][j] + 1);
+      if (j + 1 < m) ans[i][j] = Math.min(ans[i][j], ans[i][j + 1] + 1);
     }
-  }
-  return dp
+
+  return ans;
+
 };
 let a = [[0, 0, 0], [0, 1, 0], [1, 1, 1]]
 let b = updateMatrix(a);
