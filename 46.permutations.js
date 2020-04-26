@@ -63,20 +63,38 @@
  * @param {number[]} nums
  * @return {number[][]}
  */
+// var permute = function (nums) {
+//   let res = [];
+//   let sub = (arr, temp) => {
+//     if (arr.length === 0) {
+//       res.push(temp)
+//     }
+//     for (let i = 0; i < arr.length; i++) {
+//       let newarr = arr.slice(0, i).concat(arr.slice(i + 1))
+//       sub(newarr, temp.concat(arr[i]))
+//     }
+//   }
+//   sub(nums, []);
+//   return res;
+// };
+
 var permute = function (nums) {
   let res = [];
-  let sub = (arr, temp) => {
-    if (arr.length === 0) {
-      res.push(temp)
-    }
-    for (let i = 0; i < arr.length; i++) {
-      let newarr = arr.slice(0, i).concat(arr.slice(i + 1))
-      sub(newarr, temp.concat(arr[i]))
+  let backtrace = function(path){
+    if(path.length === nums.length) res.push(path);
+    for(let i of nums){
+      if(!path.includes(i)){
+        path.push(i);
+        backtrace(path.slice());
+        path.pop();
+      }
     }
   }
-  sub(nums, []);
+  backtrace([]);
   return res;
 };
+
+
 
 var a = [1, 2, 3];
 var b = permute(a);
