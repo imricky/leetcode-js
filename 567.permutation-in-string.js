@@ -73,25 +73,65 @@
  */
 // 输入: s1 = "ab" s2 = "eidbaooo"
 // 直接在s2中截取s1长度，排序后比较是否相等
+// var checkInclusion = function (s1, s2) {
+//   var s1Len = s1.length;
+//   var s2Len = s2.length;
+//   var s1Change = s1.split('').sort().join(''); // 排列s1
+//   if (s1Len === 0 || s2Len < s1Len) return false;
+//   if (s1Len === s2Len) return s1Change === s2.split('').sort().join('');
+
+//   for (let i = 0; i < s2Len; i++) {
+//     if(s1.indexOf(s2[i]) > -1){
+//       if(s1Change === s2.substring(i,s1Len+i).split('').sort().join('')){
+//         return true
+//       }
+//     }
+//   }
+//   return false
+// };
+
 var checkInclusion = function (s1, s2) {
-  var s1Len = s1.length;
-  var s2Len = s2.length;
-  var s1Change = s1.split('').sort().join(''); // 排列s1
-  if (s1Len === 0 || s2Len < s1Len) return false;
-  if (s1Len === s2Len) return s1Change === s2.split('').sort().join('');
-  
-  for (let i = 0; i < s2Len; i++) {
-    if(s1.indexOf(s2[i]) > -1){
-      if(s1Change === s2.substring(i,s1Len+i).split('').sort().join('')){
-        return true
+  let needs = {}, windows = {};
+  let left = 0, right = 0;
+  let match = 0;
+  for (let i of s1) {
+    needs[i] ? needs[i]++ : needs[i] = 1;
+  }
+  let needsLen = Object.keys(needs).length;
+
+  while (right < s2.length) {
+    let c1 = s2[right];
+    if (needs[c1]) {
+      windows[c1] ? windows[c1]++ : windows[c1] = 1;
+      if (windows[c1] === needs[c1]) {
+        match++;
       }
     }
+    right++;
+    
+    while (match === needsLen) {
+      if (right - left === s1.length) {
+        return true;
+      }
+      let c2 = s2[left];
+      if (needs[c2]) {
+        windows[c2]--;
+        if (windows[c2] < needs[c2]) {
+          match--;
+        }
+      }
+      left++;
+    }
   }
-  return false
+  return false;
 };
 // "ab"
 // "eidbaooo"
+// var s1 = 'ab';
+// var s2 = 'eidbaooo';
+// "ab"
+// "eidboaoo"
 var s1 = 'ab';
-var s2 = 'eidbaooo';
+var s2 = 'eidboaoo';
 var c = checkInclusion(s1, s2);
 console.log(c)
