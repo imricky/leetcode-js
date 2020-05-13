@@ -19,6 +19,8 @@
  * @param {number[]} nums
  * @return {number[]}
  */
+
+ // 我的解法
 var exchange = function (nums) {
   let arr = [];
   for (let i = 0; i < nums.length; i++) {
@@ -30,6 +32,30 @@ var exchange = function (nums) {
   nums = nums.filter(i => i > -1)
   return arr.concat(nums);
 };
+
+// 别人的思路，双指针解法
+
+var exchange = function(nums) {
+  let i = 0;
+  let j = nums.length - 1;
+  while(i < j) {
+      while( nums[i]%2 ) {
+          i++
+      }
+      while( nums[j]%2 == 0 ) {
+          j--
+      }
+      if (i < j) {
+          [nums[i], nums[j]] = [nums[j], nums[i]];
+      }
+  } 
+  return nums
+};
+
+作者：chi-bu-zi
+链接：https://leetcode-cn.com/problems/diao-zheng-shu-zu-shun-xu-shi-qi-shu-wei-yu-ou-shu-qian-mian-lcof/solution/shuang-zhi-zhen-diao-zheng-shu-zu-shun-xu-shi-qi-s/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 var a = [2, 16, 3, 5, 13, 1, 16, 1, 12, 18, 11, 8, 11, 11, 5, 1];
 var b = exchange(a);
